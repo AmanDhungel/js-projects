@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+      background-color: #f5f5f5;
+    }
+    #quiz-container {
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+      transition: box-shadow 0.3s ease-in-out;
+    }
+    #quiz-container:hover {
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    #question {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .option {
+      padding: 10px;
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease-in-out;
+    }
+    .option:hover {
+      background-color: #45a049;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Quiz App</h1>
+  
+  <div id="quiz-container">
+    <p id="question"></p>
+    <div class="options" id="options-container"></div>
+    <p id="result"></p>
+    <button onclick="nextQuestion()">Next Question</button>
+  </div>
+
+  <script>
+    const quizContainer = document.getElementById('quiz-container');
+    const questionElement = document.getElementById('question');
+    const optionsContainer = document.getElementById('options-container');
+    const resultElement = document.getElementById('result');
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+    const quizQuestions = [
+      {
+        question: 'What is the capital of France?',
+        options: ['Paris', 'Berlin', 'London', 'Madrid'],
+        correctAnswer: 'Paris'
+      },
+      {
+        question: 'Which planet is known as the Red Planet?',
+        options: ['Venus', 'Mars', 'Jupiter', 'Saturn'],
+        correctAnswer: 'Mars'
+      },
+      {
+        question: 'Who wrote "Romeo and Juliet"?',
+        options: ['William Shakespeare', 'Charles Dickens', 'Jane Austen', 'Mark Twain'],
+        correctAnswer: 'William Shakespeare'
+      }
+      // Add more questions as needed
+    ];
+
+    function displayQuestion() {
+      const currentQuestion = quizQuestions[currentQuestionIndex];
+      questionElement.textContent = currentQuestion.question;
+
+      optionsContainer.innerHTML = '';
+      currentQuestion.options.forEach((option) => {
+        const button = document.createElement('button');
+        button.classList.add('option');
+        button.textContent = option;
+        button.addEventListener('click', () => checkAnswer(option));
+        optionsContainer.appendChild(button);
+      });
+    }
+
+    function checkAnswer(selectedOption) {
+      const currentQuestion = quizQuestions[currentQuestionIndex];
+      if (selectedOption === currentQuestion.correctAnswer) {
+        score++;
+        resultElement.textContent = 'Correct! 🎉';
+      } else {
+        resultElement.textContent = `Wrong! The correct answer is: ${currentQuestion.correctAnswer}`;
+      }
+
+      // Disable options after an answer is selected
+      const optionButtons = document.querySelectorAll('.option');
+      optionButtons.forEach((button) => {
+        button.disabled = true;
+      });
+
+      // Show Next Question button
+      document.querySelector('button').style.display = 'block';
+    }
+
+    function nextQuestion() {
+      // Enable options for the next question
+      const optionButtons = document.querySelectorAll('.option');
+      optionButtons.forEach((button) => {
+        button.disabled = false;
+      });
+
+      // Hide result and Next Question button
+      resultElement.textContent = '';
+      document.querySelector('button').style.display = 'none';
+
+      currentQuestionIndex++;
+
+      if (currentQuestionIndex < quizQuestions.length) {
+        displayQuestion();
+      } else {
+        showFinalScore();
+      }
+    }
+
+    function showFinalScore() {
+      quizContainer.innerHTML = `<h1>Quiz Completed</h1><p>Your Final Score: ${score} out of ${quizQuestions.length}</p>`;
+    }
+
+    // Start the quiz
+    displayQuestion();
+  </script>
+
+</body>
+</html>

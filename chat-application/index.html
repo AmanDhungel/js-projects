@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Application</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+      background-color: #f5f5f5;
+    }
+    #chat-container {
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+      transition: box-shadow 0.3s ease-in-out;
+    }
+    #chat-container:hover {
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    }
+    #messages {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    #message-input {
+      width: 70%;
+      padding: 8px;
+      font-size: 16px;
+    }
+    #send-btn {
+      width: 28%;
+      padding: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      transition: background-color 0.3s ease-in-out;
+    }
+    #send-btn:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Chat Application</h1>
+  
+  <div id="chat-container">
+    <div id="messages"></div>
+    <input type="text" id="message-input" placeholder="Type your message">
+    <button id="send-btn" onclick="sendMessage()">Send</button>
+  </div>
+
+  <script>
+    // Simulated user authentication (you would use tokens or cookies in a real app)
+    const username = prompt('Enter your username:') || 'Guest';
+    localStorage.setItem('chatUsername', username);
+
+    function displayMessage(message) {
+      const messagesContainer = document.getElementById('messages');
+      const messageElement = document.createElement('div');
+      messageElement.textContent = `${message.username}: ${message.text}`;
+      messagesContainer.appendChild(messageElement);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function sendMessage() {
+      const messageInput = document.getElementById('message-input');
+      const messageText = messageInput.value.trim();
+
+      if (messageText) {
+        const message = {
+          username: localStorage.getItem('chatUsername'),
+          text: messageText,
+        };
+
+        displayMessage(message);
+        messageInput.value = '';
+      }
+    }
+  </script>
+
+</body>
+</html>

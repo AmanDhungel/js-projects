@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tic-Tac-Toe</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+      background-color: #f5f5f5;
+    }
+    #board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      gap: 5px;
+      max-width: 300px;
+      margin: auto;
+      margin-top: 20px;
+    }
+    .cell {
+      width: 100px;
+      height: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      font-weight: bold;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      transition: background-color 0.3s ease-in-out;
+    }
+    .cell:hover {
+      background-color: #f0f0f0;
+    }
+    #restart-button {
+      display: none;
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease-in-out;
+    }
+    #restart-button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Tic-Tac-Toe</h1>
+  
+  <div id="board"></div>
+  <p id="status"></p>
+  <p id="winner"></p>
+  <button id="restart-button" onclick="restartGame()">Restart Game</button>
+
+  <script>
+    const board = document.getElementById('board');
+    const status = document.getElementById('status');
+    const winnerMessage = document.getElementById('winner');
+    const restartButton = document.getElementById('restart-button');
+    let currentPlayer = 'X';
+    let gameBoard = ['', '', '', '', '', '', '', '', ''];
+    let gameActive = true;
+
+    function createCell(index) {
+      const cell = document.createElement('div');
+      cell.classList.add('cell');
+      cell.setAttribute('data-index', index);
+      cell.addEventListener('click', () => cellClick(index));
+      board.appendChild(cell);
+    }
+
+    function initializeBoard() {
+      board.innerHTML = '';
+      gameBoard = Array(9).fill('');
+      for (let i = 0; i < 9; i++) {
+        createCell(i);
+      }
+      currentPlayer = 'X';
+      gameActive = true;
+      status.textContent = 'Player X\'s turn';
+      winnerMessage.textContent = '';
+      restartButton.style.display = 'none';
+    }
+
+    function cellClick(index) {
+      if (!gameActive || gameBoard[index] !== '') return;
+
+      gameBoard[index] = currentPlayer;
+      updateBoard();
+      checkWinner();
+      switchPlayer();
+    }
+
+    function updateBoard() {
+      const cells = document.querySelectorAll('.cell');
+      cells.forEach((cell, index) => {
+        cell.textContent = gameBoard[index];
+      });
+    }
+
+    function switchPlayer() {
+      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+      status.textContent = `Player ${currentPlayer}'s turn`;
+    }
+
+    function checkWinner() {
+      const winningCombinations = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+        [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+        [0, 4, 8], [2, 4, 6]             // Diagonals
+      ];
+
+      for (const combination of winningCombinations) {
+        const [a, b, c] = combination;
+        if (gameBoard[a] !== '' && gameBoard[a] === gameBoard[b] && gameBoard[b] === gameBoard[c]) {
+          status.textContent = '';
+          winnerMessage.textContent = `Player ${currentPlayer} wins!`;
+          gameActive = false;
+          showRestartButton();
+          return;
+        }
+      }
+
+      if (!gameBoard.includes('')) {
+        status.textContent = '';
+        winnerMessage.textContent = 'It\'s a draw!';
+        gameActive = false;
+        showRestartButton();
+      }
+    }
+
+    function showRestartButton() {
+      restartButton.style.display = 'block';
+    }
+
+    function restartGame() {
+      initializeBoard();
+    }
+
+    initializeBoard();
+  </script>
+
+</body>
+</html>
